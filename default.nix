@@ -1,6 +1,6 @@
 {
-  haskellUpdates ? import  (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/haskell-updates.tar.gz") {},
-  master ? import  (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/master.tar.gz") {}
+  haskellUpdates ? import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/haskell-updates.tar.gz") {},
+  master ? import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/master.tar.gz") {}
 }:
 let
   gitignore = haskellUpdates.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
@@ -9,28 +9,47 @@ let
   lib = haskell.lib;
   ghc921 = haskellPackages.ghc921;
   ghc902 = haskellPackages.ghc902;
-in compiler: with compiler; {
-  haskellPackages = haskellPackages;
+in
+compiler: rec {
   ghc = haskellPackages.${compiler};
-  availableBuildTools = [
-    ghc902.apply-refact
-    ghc921.cabal-install
-    ghc921.doctest
-    ghc921.ghci-dap
-    ghc921.ghcid
-    ghc921.ghcide
-    ghc921.haskell-dap
-    ghc921.haskell-debug-adapter
-    ghc921.haskell-language-server
-    ghc921.hasktags
-    ghc921.hlint
-    ghc921.implicit-hie
-    master.haskellPackages.krank
-    master.haskellPackages.stan
-    master.haskellPackages.stylish-haskell
-    ghc902.weeder
+  availableBuildTools = with ghc921; {
+    apply-refact = ghc902.apply-refact;
+    cabal-install = cabal-install;
+    doctest = doctest;
+    ghci-dap = ghci-dap;
+    ghcid = ghcid;
+    ghcide = ghcide;
+    haskell-dap = haskell-dap;
+    haskell-debug-adapter = haskell-debug-adapter;
+    haskell-language-server = haskell-language-server;
+    hasktags = hasktags;
+    hlint = hlint;
+    implicit-hie = implicit-hie;
+    krank = master.haskellPackages.krank;
+    selenium-server-standalone = master.selenium-server-standalone;
+    stan = master.haskellPackages.stan;
+    stylish-haskell = master.haskellPackages.stylish-haskell;
+    weeder = ghc902.weeder;
+  };
+  defaultBuildTools = with availableBuildTools; [
+    apply-refact
+    cabal-install
+    doctest
+    ghci-dap
+    ghcid
+    ghcide
+    haskell-dap
+    haskell-debug-adapter
+    haskell-language-server
+    hasktags
+    hlint
+    implicit-hie
+    krank
+    stan
+    stylish-haskell
+    weeder
   ];
-  optionalBuildTools = with nixpkgs; [
-    # selenium-server
+  optionalBuildTools = with availableBuildTools; [
+    selenium-server-standalone
   ];
 }
