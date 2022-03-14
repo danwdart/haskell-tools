@@ -7,12 +7,12 @@ let
   haskell = haskellUpdates.pkgs.haskell;
   haskellPackages = haskell.packages;
   lib = haskell.lib;
-  ghc921 = haskellPackages.ghc921;
+  ghc922 = haskellPackages.ghc922;
   ghc902 = haskellPackages.ghc902;
 in
 compiler: rec {
   ghc = haskellPackages.${compiler};
-  availableBuildTools = with ghc921; {
+  availableBuildTools = with ghc922; {
     apply-refact = ghc902.apply-refact;
     cabal-install = cabal-install;
     doctest = doctest;

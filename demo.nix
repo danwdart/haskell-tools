@@ -1,6 +1,6 @@
 { nixpkgs ? import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/master.tar.gz") {},
   haskell-tools ? import ./default.nix {},
-  compiler ? "ghc921"
+  compiler ? "ghc922"
 }:
 let
   tools = haskell-tools compiler;
