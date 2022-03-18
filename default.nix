@@ -13,23 +13,23 @@ in
 compiler: rec {
   ghc = haskellPackages.${compiler};
   availableBuildTools = with ghc922; {
-    apply-refact = ghc902.apply-refact;
-    cabal-install = cabal-install;
-    doctest = doctest;
-    ghci-dap = ghci-dap;
-    ghcid = ghcid;
-    ghcide = ghcide;
-    haskell-dap = haskell-dap;
-    haskell-debug-adapter = haskell-debug-adapter;
-    haskell-language-server = haskell-language-server;
-    hasktags = hasktags;
-    hlint = hlint;
-    implicit-hie = implicit-hie;
-    krank = master.haskellPackages.krank;
+    apply-refact = lib.dontHaddock ghc902.apply-refact;
+    cabal-install = lib.dontHaddock cabal-install;
+    doctest = lib.dontHaddock doctest;
+    ghci-dap = lib.dontHaddock ghci-dap;
+    ghcid = lib.dontHaddock ghcid;
+    ghcide = lib.dontHaddock ghcide;
+    haskell-dap = lib.dontHaddock haskell-dap;
+    haskell-debug-adapter = lib.dontHaddock haskell-debug-adapter;
+    haskell-language-server = lib.dontHaddock haskell-language-server;
+    hasktags = lib.dontHaddock hasktags;
+    hlint = lib.dontHaddock hlint;
+    implicit-hie = lib.dontHaddock implicit-hie;
+    krank = lib.dontHaddock master.haskellPackages.krank;
     selenium-server-standalone = master.selenium-server-standalone;
-    stan = master.haskellPackages.stan;
-    stylish-haskell = master.haskellPackages.stylish-haskell;
-    weeder = ghc902.weeder;
+    stan = lib.dontHaddock master.haskellPackages.stan;
+    stylish-haskell = lib.dontHaddock master.haskellPackages.stylish-haskell;
+    weeder = lib.dontHaddock ghc902.weeder;
   };
   defaultBuildTools = with availableBuildTools; [
     apply-refact
