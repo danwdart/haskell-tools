@@ -1,4 +1,4 @@
-{ nixpkgs ? import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/master.tar.gz") {},
+{ nixpkgs ? import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/haskell-updates.tar.gz") {},
   haskell-tools ? import ./default.nix {},
   compiler ? "ghc922"
 }:
