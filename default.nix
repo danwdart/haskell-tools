@@ -1,12 +1,12 @@
 {
   nixpkgs ? import <nixpkgs> {},
   unstable ? import <unstable> {},
-  haskellUpdates ? import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/haskell-updates.tar.gz") {},
-  # master ? import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/master.tar.gz") {}
+  haskellUpdates ? import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/master.tar.gz") {},
+  master ? import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/master.tar.gz") {}
 }:
 let
-  gitignore = haskellUpdates.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
-  haskell = haskellUpdates.pkgs.haskell;
+  gitignore = master.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
+  haskell = master.pkgs.haskell;
   haskellPackages = haskell.packages;
   lib = haskell.lib;
   ghc922 = haskellPackages.ghc922;
