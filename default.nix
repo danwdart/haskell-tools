@@ -19,7 +19,8 @@ compiler: rec {
     cabal-install           = cabal-install;
     doctest                 = doctest;
     ghcide                  = ghcide;
-    haskell-language-server = haskell-language-server;
+    # ghc922 has many bad interface file errors
+    haskell-language-server = ghc902.haskell-language-server;
     hlint                   = hlint;
     implicit-hie            = implicit-hie;
     # Cached in HU with 9.0.2
