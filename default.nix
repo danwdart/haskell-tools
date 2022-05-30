@@ -6,7 +6,7 @@
 }:
 let
   gitignore = unstable.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
-  haskell = unstable.pkgs.haskell;
+  haskell = haskellUpdates.pkgs.haskell;
   haskellPackages = haskell.packages;
   lib = haskell.lib;
   ghc923 = haskellPackages.ghc923;
@@ -15,30 +15,25 @@ in
 compiler: rec {
   ghc = haskellPackages.${compiler};
   availableBuildTools = with ghc923; {
-    # Cached in HU
-    cabal-install           = cabal-install;
-    doctest                 = doctest;
-    ghcide                  = ghc.ghcide;
-    # ghc923 has many bad interface file errors
-    haskell-language-server = ghc902.haskell-language-server;
-    hlint                   = hlint;
-    implicit-hie            = implicit-hie;
-    # Cached in HU with 9.0.2
-    apply-refact = ghc902.apply-refact;
-    weeder       = ghc902.weeder;
-    # Cached only in unstable built with 9.2.2
-    ghci-dap    = unstable.haskell.packages.ghc923.ghci-dap; # 0.0.17.0 in both?
-    haskell-dap = unstable.haskell.packages.ghc923.haskell-dap; # 0.0.15.0 in both?
-    # Cached only in unstable built with 9.0.2
-    stylish-haskell       = unstable.haskell.packages.ghc902.stylish-haskell; # 0.14.0.1 whereas 0.14.1.0 in HU
-    ghcid                 = unstable.haskell.packages.ghc902.ghcid; # 0.8.7-bin in unstable, 0.8.7 in HU
-    hasktags              = unstable.haskell.packages.ghc902.hasktags; # 0.72.0 in both?
-    haskell-debug-adapter = unstable.haskell.packages.ghc902.haskell-debug-adapter; # 0.0.35.0 in both?
-    # Cached only on nixpkgs with ghc 8.10.7
-    krank = nixpkgs.haskell.packages.ghc8107.krank;
-    stan  = nixpkgs.haskell.packages.ghc8107.stan;
-    # Other tools
-    selenium-server-standalone = unstable.selenium-server-standalone;
+    # Currently selected
+    ghcide                      = ghc.ghcide;
+    haskell-language-server     = ghc.haskell-language-server;
+    cabal-install               = ghc.cabal-install;
+    # All other
+    doctest                     = doctest;
+    hlint                       = hlint;
+    implicit-hie                = implicit-hie;
+    weeder                      = weeder;
+    ghci-dap                    = ghci-dap;
+    haskell-dap                 = haskell-dap;
+    apply-refact                = ghc902.apply-refact;
+    stylish-haskell             = unstable.haskell.packages.ghc902.stylish-haskell;
+    ghcid                       = unstable.haskell.packages.ghc902.ghcid;
+    hasktags                    = unstable.haskell.packages.ghc902.hasktags;
+    haskell-debug-adapter       = unstable.haskell.packages.ghc902.haskell-debug-adapter;
+    krank                       = nixpkgs.haskell.packages.ghc8107.krank;
+    stan                        = nixpkgs.haskell.packages.ghc8107.stan;
+    selenium-server-standalone  = unstable.selenium-server-standalone;
   };
   defaultBuildTools = with availableBuildTools; [
     apply-refact
