@@ -1,6 +1,6 @@
 { nixpkgs ? import <unstable> {},
   haskell-tools ? import ./default.nix {},
-  compiler ? "ghc922"
+  compiler ? "ghc923"
 }:
 let
   tools = haskell-tools compiler;
