@@ -9,17 +9,17 @@ let
   haskell = unstable.pkgs.haskell;
   haskellPackages = haskell.packages;
   lib = haskell.lib;
-  ghc922 = haskellPackages.ghc922;
+  ghc923 = haskellPackages.ghc923;
   ghc902 = haskellPackages.ghc902;
 in
 compiler: rec {
   ghc = haskellPackages.${compiler};
-  availableBuildTools = with ghc922; {
+  availableBuildTools = with ghc923; {
     # Cached in HU
     cabal-install           = cabal-install;
     doctest                 = doctest;
-    ghcide                  = ghcide;
-    # ghc922 has many bad interface file errors
+    ghcide                  = ghc.ghcide;
+    # ghc923 has many bad interface file errors
     haskell-language-server = ghc902.haskell-language-server;
     hlint                   = hlint;
     implicit-hie            = implicit-hie;
@@ -27,8 +27,8 @@ compiler: rec {
     apply-refact = ghc902.apply-refact;
     weeder       = ghc902.weeder;
     # Cached only in unstable built with 9.2.2
-    ghci-dap    = unstable.haskell.packages.ghc922.ghci-dap; # 0.0.17.0 in both?
-    haskell-dap = unstable.haskell.packages.ghc922.haskell-dap; # 0.0.15.0 in both?
+    ghci-dap    = unstable.haskell.packages.ghc923.ghci-dap; # 0.0.17.0 in both?
+    haskell-dap = unstable.haskell.packages.ghc923.haskell-dap; # 0.0.15.0 in both?
     # Cached only in unstable built with 9.0.2
     stylish-haskell       = unstable.haskell.packages.ghc902.stylish-haskell; # 0.14.0.1 whereas 0.14.1.0 in HU
     ghcid                 = unstable.haskell.packages.ghc902.ghcid; # 0.8.7-bin in unstable, 0.8.7 in HU
