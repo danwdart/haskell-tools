@@ -17,7 +17,6 @@ compiler: rec {
   availableBuildTools = with ghc923; {
     # Currently selected
     ghcide                      = ghc.ghcide;
-    haskell-language-server     = ghc.haskell-language-server;
     cabal-install               = ghc.cabal-install;
     # All other
     doctest                     = doctest;
@@ -26,6 +25,7 @@ compiler: rec {
     weeder                      = weeder;
     ghci-dap                    = ghci-dap;
     haskell-dap                 = haskell-dap;
+    haskell-language-server     = ghc902.haskell-language-server;
     apply-refact                = ghc902.apply-refact;
     stylish-haskell             = unstable.haskell.packages.ghc902.stylish-haskell;
     ghcid                       = unstable.haskell.packages.ghc902.ghcid;
