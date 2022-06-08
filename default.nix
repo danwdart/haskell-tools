@@ -20,12 +20,12 @@ compiler: rec {
     cabal-install               = ghc.cabal-install;
     # All other
     doctest                     = doctest;
-    hlint                       = hlint;
     implicit-hie                = implicit-hie;
     weeder                      = weeder;
     ghci-dap                    = ghci-dap;
     haskell-dap                 = haskell-dap;
     haskell-language-server     = ghc902.haskell-language-server;
+    hlint                       = ghc902.hlint;
     apply-refact                = ghc902.apply-refact;
     stylish-haskell             = unstable.haskell.packages.ghc902.stylish-haskell;
     ghcid                       = unstable.haskell.packages.ghc902.ghcid;
