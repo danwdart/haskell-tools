@@ -31,8 +31,8 @@ compiler: rec {
     ghcid                       = unstable.haskell.packages.ghc902.ghcid;
     hasktags                    = unstable.haskell.packages.ghc902.hasktags;
     haskell-debug-adapter       = unstable.haskell.packages.ghc902.haskell-debug-adapter;
-    krank                       = nixpkgs.haskell.packages.ghc8107.krank;
-    stan                        = nixpkgs.haskell.packages.ghc8107.stan;
+    krank                       = null; # nixpkgs.haskell.packages.ghc8107.krank;
+    stan                        = null; # nixpkgs.haskell.packages.ghc8107.stan;
     selenium-server-standalone  = unstable.selenium-server-standalone;
   };
   defaultBuildTools = with availableBuildTools; [
