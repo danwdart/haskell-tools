@@ -1,39 +1,34 @@
 {
   nixpkgs ? import <nixpkgs> {},
-  unstable ? import <unstable> {},
-  haskellUpdates ? import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/haskell-updates.tar.gz") {},
-  master ? import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/master.tar.gz") {}
+  compiler ? "ghc941"
 }:
 let
-  gitignore = unstable.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
-  haskell = haskellUpdates.pkgs.haskell;
+  gitignore = nixpkgs.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
+  haskell = nixpkgs.pkgs.haskell;
   haskellPackages = haskell.packages;
   lib = haskell.lib;
-  ghc923 = haskellPackages.ghc923;
   ghc902 = haskellPackages.ghc902;
 in
 compiler: rec {
   ghc = haskellPackages.${compiler};
-  availableBuildTools = with ghc923; {
-    # Currently selected
-    ghcide                      = ghc.ghcide;
-    cabal-install               = ghc.cabal-install;
-    # All other
+  availableBuildTools = with ghc; {
+    apply-refact                = ghc902.apply-refact;
+    cabal-install               = cabal-install;
     doctest                     = doctest;
-    implicit-hie                = implicit-hie;
-    weeder                      = weeder;
+    ghcid                       = ghcid;
+    ghcide                      = ghc902.ghcide;
     ghci-dap                    = ghci-dap;
     haskell-dap                 = haskell-dap;
+    haskell-debug-adapter       = haskell-debug-adapter;
     haskell-language-server     = ghc902.haskell-language-server;
-    hlint                       = ghc902.hlint;
-    apply-refact                = ghc902.apply-refact;
-    stylish-haskell             = unstable.haskell.packages.ghc902.stylish-haskell;
-    ghcid                       = unstable.haskell.packages.ghc902.ghcid;
-    hasktags                    = unstable.haskell.packages.ghc902.hasktags;
-    haskell-debug-adapter       = unstable.haskell.packages.ghc902.haskell-debug-adapter;
-    krank                       = null; # nixpkgs.haskell.packages.ghc8107.krank;
-    stan                        = null; # nixpkgs.haskell.packages.ghc8107.stan;
-    selenium-server-standalone  = unstable.selenium-server-standalone;
+    hasktags                    = hasktags;
+    hlint                       = hlint;
+    implicit-hie                = implicit-hie;
+    krank                       = null; # krank;
+    selenium-server-standalone  = selenium-server-standalone;
+    stan                        = null; # stan;
+    stylish-haskell             = ghc902.stylish-haskell;
+    weeder                      = null; # weeder;
   };
   defaultBuildTools = with availableBuildTools; [
     apply-refact
