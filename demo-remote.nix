@@ -1,5 +1,5 @@
 { nixpkgs ? import <nixpkgs> {},
-  haskell-tools ? import ./default.nix {
+  haskell-tools ? import (builtins.fetchTarball "https://github.com/danwdart/haskell-tools/archive/master.tar.gz") {
     nixpkgs = nixpkgs;
     compiler = compiler;
   },
