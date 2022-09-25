@@ -6,10 +6,10 @@
 
 # "Cabal 3.8.0.20220526 supports 'ghc' version < 9.4"
 
-# nix-build --argstr compiler ghc941 -I nixpkgs=$HASKELL_UPDATES demo.nix -o result/haskell-updates/ghc941 --show-trace
-# nix-build --argstr compiler ghc941 -I nixpkgs=$MASTER demo.nix -o result/master/ghc941 --show-trace
-# No cabal: nix-build --argstr compiler ghc941 -I nixpkgs=$UNSTABLE demo.nix -o result/unstable/ghc941 --show-trace
-# No cabal: nix-build --argstr compiler ghc941 -I nixpkgs=$NIXPKGS demo.nix -o result/nixpkgs/ghc941 --show-trace
+# nix-build --argstr compiler ghc942 -I nixpkgs=$HASKELL_UPDATES demo.nix -o result/haskell-updates/ghc942 --show-trace
+# nix-build --argstr compiler ghc942 -I nixpkgs=$MASTER demo.nix -o result/master/ghc942 --show-trace
+# No cabal: nix-build --argstr compiler ghc942 -I nixpkgs=$UNSTABLE demo.nix -o result/unstable/ghc942 --show-trace
+# No cabal: nix-build --argstr compiler ghc942 -I nixpkgs=$NIXPKGS demo.nix -o result/nixpkgs/ghc942 --show-trace
 
 # nix-build --argstr compiler ghc924 -I nixpkgs=$HASKELL_UPDATES demo.nix -o result/haskell-updates/ghc924 --show-trace
 # nix-build --argstr compiler ghc924 -I nixpkgs=$MASTER demo.nix -o result/master/ghc924 --show-trace
