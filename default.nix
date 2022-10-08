@@ -1,6 +1,6 @@
 {
   nixpkgs ? import <nixpkgs> {},
-  compiler ? "ghc924"
+  compiler ? "ghc942"
 }:
 let
   gitignore = nixpkgs.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
@@ -15,17 +15,24 @@ compiler: rec {
   availableBuildTools = with ghc; {
     apply-refact                = ghc902.apply-refact;
     cabal-install               = cabal-install;
-    doctest                     = doctest;
-    ghcid                       = ghcid;
+    doctest                     = ghc924.doctest;
+    # https://github.com/hspec/hspec/issues/747
+    ghcid                       = ghc924.ghcid;
     ghcide                      = ghc902.ghcide;
-    ghci-dap                    = ghci-dap;
+    # Could not find module ‘GHCi.GhcApiCompat’
+    ghci-dap                    = ghc924.ghci-dap;
     haskell-dap                 = haskell-dap;
-    haskell-debug-adapter       = haskell-debug-adapter;
-    haskell-language-server     = ghc902.haskell-language-server;
-    hasktags                    = hasktags;
-    hlint                       = hlint;
+    # https://github.com/hspec/hspec/issues/747
+    haskell-debug-adapter       = ghc924.haskell-debug-adapter;
+    # ghc-source-gen-0.4.3.0 broken
+    haskell-language-server     = ghc924.haskell-language-server;
+    # text >=0.11 && <1.3
+    hasktags                    = ghc924.hasktags;
+    # ghc-lib-parser >=9.0 && <9.1, ghc-lib-parser-ex >=9.0.0.4 && <9.0.1
+    hlint                       = ghc924.hlint;
     implicit-hie                = implicit-hie;
-    krank                       = (ghc.override {
+    # https://github.com/hspec/hspec/issues/747
+    krank                       = (ghc924.override {
       overrides = self: super: rec {
         PyF = self.callHackage "PyF" "0.11.1.0" {};
       };
@@ -61,8 +68,9 @@ compiler: rec {
       ref = "9.4-compat";
       rev = "70c14718486f399c11209580d4762b73499cd0e3";
     }) {});
-    stylish-haskell             = ghc902.stylish-haskell;
-    weeder                      = weeder;
+    # base >=4.14 && <4.17, ghc-prim >0.2 && <0.9, time >=1.4 && <1.12
+    stylish-haskell             = ghc924.stylish-haskell;
+    weeder                      = ghc924.weeder;
   };
   defaultBuildTools = with availableBuildTools; [
     apply-refact

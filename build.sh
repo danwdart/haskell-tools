@@ -12,6 +12,8 @@ set -euo pipefail
 # nix-build --argstr compiler ghc942 -I nixpkgs=$MASTER demo.nix -o result/master/ghc942 --show-trace
 # No cabal: nix-build --argstr compiler ghc942 -I nixpkgs=$UNSTABLE demo.nix -o result/unstable/ghc942 --show-trace
 # No cabal: nix-build --argstr compiler ghc942 -I nixpkgs=$NIXPKGS demo.nix -o result/nixpkgs/ghc942 --show-trace
+nix-build --argstr compiler ghc942 demo.nix -o result/nixpkgs/ghc942 --show-trace 2>&1 | sed 's/^/ghc942: /g'
+nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc942 demo.nix --add-root result/nixpkgs/ghc942 --indirect) | cachix push websites
 
 # nix-build --argstr compiler ghc924 -I nixpkgs=$HASKELL_UPDATES demo.nix -o result/haskell-updates/ghc924 --show-trace
 # nix-build --argstr compiler ghc924 -I nixpkgs=$MASTER demo.nix -o result/master/ghc924 --show-trace
