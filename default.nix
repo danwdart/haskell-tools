@@ -41,7 +41,15 @@ compiler: rec {
         };
       }).ghcide;
       # haskell-language-server = null;
-      haskell-language-server = haskellUpdates.haskell.packages.ghc942.haskell-language-server;
+      haskell-language-server = (haskellUpdates.haskell.packages.ghc942.override {
+        overrides = self: super: rec {
+          # not yet released
+          streaming-commons = self.callCabal2nix "streaming-commons" (builtins.fetchGit {
+            url = "https://github.com/fpco/streaming-commons.git";
+            rev = "eb65c96c28e39a352023c24e2517880f0bf246c5";
+          }) {};
+        };
+      }).haskell-language-server;
       stylish-haskell = ghc924.stylish-haskell; # lib.enableCabalFlag ghc.stylish-haskell "ghc-lib";
       #stylish-haskell = (ghc.override {
       #  overrides = self: super: rec {
@@ -66,6 +74,14 @@ compiler: rec {
     haskell-dap                 = haskell-dap;
     # https://github.com/hspec/hspec/issues/747
     haskell-debug-adapter       = ghc924.haskell-debug-adapter;
+    haskell-docs-cli            = (ghc.override {
+      overrides = self: super: rec {
+        haskell-docs-cli = self.callCabal2nix "haskell-docs-cli" (builtins.fetchGit {
+          url = "https://github.com/lazamar/haskell-docs-cli.git";
+          rev = "6c40bd41f0f6be5f06afae2836c42710dc05cd87";
+        }) {};
+      };
+    }).haskell-docs-cli;
     # ghc-source-gen-0.4.3.0 broken
     # Must be compiled using same version of ghc
     haskell-language-server     = toolsPerGHC.${compiler}.haskell-language-server; # 
@@ -73,6 +89,7 @@ compiler: rec {
     hasktags                    = ghc924.hasktags;
     # ghc-lib-parser >=9.0 && <9.1, ghc-lib-parser-ex >=9.0.0.4 && <9.0.1
     hlint                       = ghc924.hlint;
+    hoogle                      = hoogle;
     implicit-hie                = implicit-hie;
     # https://github.com/hspec/hspec/issues/747
     krank                       = (ghc924.override {
@@ -124,9 +141,11 @@ compiler: rec {
     ghcide
     haskell-dap
     haskell-debug-adapter
+    haskell-docs-cli
     haskell-language-server
     hasktags
     hlint
+    hoogle
     implicit-hie
     krank
     stan
