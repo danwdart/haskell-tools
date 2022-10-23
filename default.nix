@@ -118,7 +118,10 @@ compiler: rec {
         slist = lib.doJailbreak super.slist;
         relude = (ghc924.override {
           overrides = self: super: rec {
-            doctest = self.callHackage "doctest" "0.20.0" {};
+            doctest = self.callCabal2nix "doctest" (builtins.fetchGit {
+              url = "https://github.com/sol/doctest.git";
+              rev = "495a76478d63a31c61523b1a539f49340e6be122";
+            }) {};
           };
         }).callHackage "relude" "1.1.0.0" {};
       };
