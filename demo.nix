@@ -3,13 +3,13 @@
     nixpkgs = nixpkgs;
     compiler = compiler;
   },
-  compiler ? "ghc924"
+  compiler ? "ghc942"
 }:
 let
   tools = haskell-tools compiler;
   shell = tools.ghc.shellFor {
     packages = p: [];
-    buildTools = tools.defaultBuildTools;
+    buildInputs = tools.defaultBuildTools;
   };
 in
 {

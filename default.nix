@@ -40,7 +40,6 @@ compiler: rec {
           ghc-check = lib.dontHaddock super.ghc-check;
         };
       }).ghcide;
-      # haskell-language-server = null;
       haskell-language-server = (haskellUpdates.haskell.packages.ghc942.override {
         overrides = self: super: rec {
           # not yet released
@@ -64,7 +63,10 @@ compiler: rec {
   availableBuildTools = with ghc; {
     apply-refact                = ghc902.apply-refact;
     cabal-install               = cabal-install;
-    doctest                     = ghc924.doctest;
+    doctest                     = ghc.callCabal2nix "doctest" (builtins.fetchGit {
+      url = "https://github.com/sol/doctest.git";
+      rev = "495a76478d63a31c61523b1a539f49340e6be122";
+    }) {};
     # 0.5.1.1 not yet released
     ghcid                       = toolsPerGHC.${compiler}.ghcid;
     # Must be compiled using same version of ghc
