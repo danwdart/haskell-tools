@@ -1,31 +1,32 @@
 {
   nixpkgs ? import <nixpkgs> {},
-  compiler ? "ghc942"
+  compiler ? "ghc94"
 }:
 let
   gitignore = nixpkgs.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
   haskell = nixpkgs.pkgs.haskell;
   haskellPackages = haskell.packages;
   lib = haskell.lib;
-  ghc924 = haskellPackages.ghc924;
-  ghc902 = haskellPackages.ghc902;
+  ghc94 = haskellPackages.ghc94;
+  ghc92 = haskellPackages.ghc92;
+  ghc90 = haskellPackages.ghc90;
 in
 compiler: rec {
   ghc = haskellPackages.${compiler};
   toolsPerGHC = with ghc; {
-    ghc902 = {
+    ghc90 = {
       ghcid = ghcid;
       stylish-haskell = stylish-haskell;
       apply-refact = apply-refact;
       haskell-debug-adapter = haskell-debug-adapter;
     };
-    ghc924 = {
+    ghc92 = {
       ghcid = ghcid;
       stylish-haskell = stylish-haskell;
       apply-refact = apply-refact;
       haskell-debug-adapter = haskell-debug-adapter;
     };
-    ghc942 = {
+    ghc94 = {
       ghcid = (ghc.override {
         overrides = self: super: rec {
           # not in nix yet
@@ -33,9 +34,9 @@ compiler: rec {
         };
       }).ghcid;
       # ghc-lib-parser: base >=4.14 && <4.17, ghc-prim >0.2 && <0.9, time >=1.4 && <1.12
-      stylish-haskell = ghc924.stylish-haskell;
+      stylish-haskell = ghc92.stylish-haskell;
       # ghc-exactprint: base >=4.8 && <4.16, ghc >=7.10.2 && <9.2
-      apply-refact = ghc924.apply-refact;
+      apply-refact = ghc92.apply-refact;
       haskell-debug-adapter = (ghc.override {
         overrides = self: super: rec {
           # not in nix yet
@@ -62,44 +63,47 @@ compiler: rec {
     haskell-debug-adapter       = toolsPerGHC.${compiler}.haskell-debug-adapter;
     stylish-haskell             = toolsPerGHC.${compiler}.stylish-haskell;
     # text >=0.11 && <1.3
-    hasktags                    = ghc924.hasktags;
+    hasktags                    = ghc92.hasktags;
     # ghc-lib-parser >=9.0 && <9.1, ghc-lib-parser-ex >=9.0.0.4 && <9.0.1
-    hlint                       = ghc924.hlint;
+    hlint                       = ghc92.hlint;
     # dhall 1.40.2: aeson >=1.0.0.0 && <2.1, template-haskell >=2.13.0.0 && <2.19
-    weeder                      = ghc924.weeder;
+    weeder                      = ghc92.weeder;
+    # not yet in nix
     krank                       = (ghc.override {
       overrides = self: super: rec {
-        # not released yet
+        # nor is this
         PyF = self.callHackage "PyF" "0.11.1.0" {};
-        # not released yet
+        # and nor is this
         req = self.callHackage "req" "3.13.0" {};
       };
-    # updates to fix made since 0.2.3: https://github.com/guibou/krank/issues/94
-    }).callCabal2nix "krank" (builtins.fetchGit {
+    })
+    # 0.3.0 not yet in nix
+    .callCabal2nix "krank" (builtins.fetchGit {
       url = "https://github.com/guibou/krank.git";
-      rev = "dd799efa1f2d1fac4ce0f80c4f47731b32e6fcaf";
+      rev = "33df2bf090b7f5c646ec770a4f3a8894ba6dce00";
     }) {};
     # also: https://github.com/kowainik/slist/issues/55
-    stan                        = lib.dontCheck ((ghc924.override {
+    stan                        = lib.doJailbreak ((ghc94.override {
       overrides = self: super: rec {
         # https://github.com/kowainik/extensions/issues/74
-        extensions = lib.doJailbreak (self.callCabal2nix "extensions" (builtins.fetchGit {
-          url = "https://github.com/tomjaguarpaw/extensions.git";
-          ref = "9.4";
-          rev = "6748ccbcea0d06488b6e288e9b68233fe4d73eb7";
-        }) {});
+        # extensions = ghc.callHackage "extensions" "0.1.0.0" {};
         # https://github.com/kowainik/trial/issues/67
         trial-tomland = lib.doJailbreak (lib.markUnbroken super.trial-tomland);
         clay = lib.doJailbreak super.clay;
-        slist = lib.doJailbreak super.slist;
-        # relude 1.0.0.1: Module ‘Data.Semigroup’ does not export ‘Option(..)’ if using ghc942
-        # relude = lib.doJailbreak (self.callHackage "relude" "1.1.0.0" {});
+        # not released
+        slist = self.callCabal2nix "slist" (builtins.fetchGit {
+          url = "https://github.com/kowainik/slist.git";
+          rev = "09e7c4279f954db18e27a60aa8569dc3458b24ad";
+        }) {};
+        # relude 1.0.0.1: Module ‘Data.Semigroup’ does not export ‘Option(..)’ if using ghc94
+        # 1.1.0.0 not yet in nix
+        relude = lib.doJailbreak (self.callHackage "relude" "1.1.0.0" {});
       };
     # https://github.com/kowainik/stan/issues/423
     }).callCabal2nix "stan" (builtins.fetchGit {
       url = "https://github.com/tomjaguarpaw/stan.git";
       ref = "9.4-compat";
-      rev = "70c14718486f399c11209580d4762b73499cd0e3";
+      rev = "ebb791cbf587a93b1b2832caa8d89b3b867d1cfd";
     }) {});
     # not in hackage at all
     haskell-docs-cli            = (ghc.override {
