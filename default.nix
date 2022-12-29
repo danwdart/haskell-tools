@@ -27,12 +27,12 @@ compiler: rec {
       haskell-debug-adapter = haskell-debug-adapter;
     };
     ghc94 = {
-      ghcid = (ghc.override {
+      ghcid = lib.dontCheck ((ghc.override {
         overrides = self: super: rec {
           # not in nix yet
           hspec-contrib = self.callHackage "hspec-contrib" "0.5.1.1" {};
         };
-      }).ghcid;
+      }).ghcid);
       # ghc-lib-parser: base >=4.14 && <4.17, ghc-prim >0.2 && <0.9, time >=1.4 && <1.12
       stylish-haskell = ghc92.stylish-haskell;
       # ghc-exactprint: base >=4.8 && <4.16, ghc >=7.10.2 && <9.2
@@ -74,7 +74,11 @@ compiler: rec {
         # nor is this
         PyF = self.callHackage "PyF" "0.11.1.0" {};
         # and nor is this
-        req = self.callHackage "req" "3.13.0" {};
+        req = lib.doJailbreak ((ghc.override {
+          overrides = self: super: rec {
+            http-api-data = lib.doJailbreak super.http-api-data;
+          };
+        }).callHackage "req" "3.13.0" {});
       };
     })
     # 0.3.0 not yet in nix
@@ -89,7 +93,7 @@ compiler: rec {
         # extensions = ghc.callHackage "extensions" "0.1.0.0" {};
         # https://github.com/kowainik/trial/issues/67
         trial-tomland = lib.doJailbreak (lib.markUnbroken super.trial-tomland);
-        clay = lib.doJailbreak super.clay;
+        clay = lib.markUnbroken (lib.doJailbreak super.clay);
         # not released
         slist = self.callCabal2nix "slist" (builtins.fetchGit {
           url = "https://github.com/kowainik/slist.git";
