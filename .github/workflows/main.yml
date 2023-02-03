@@ -4,6 +4,7 @@ on:
     - cron: "0 2 * * *"
   pull_request:
   push:
+  workflow_dispatch:
 jobs:
   push-to-cachix:
     runs-on: ubuntu-latest
