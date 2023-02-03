@@ -17,4 +17,10 @@ jobs:
       with:
         name: haskell-tools
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: for ghcVersion in ghc94 ghc92 ghc90; do mkdir -p result/nixpkgs/$ghcVersion; nix-store -qR --include-outputs $(nix-instantiate --argstr compiler $ghcVersion demo.nix --add-root result/nixpkgs/$fgcVersion --indirect) | cachix push haskell-tools; done
+    - run: |
+        for ghcVersion in ghc94 ghc92 ghc90;
+        do
+          mkdir -p result/nixpkgs/$ghcVersion
+          nix-build --argstr compiler $ghcVersion demo.nix -o result/nixpkgs/$ghcVersion --show-trace 2>&1 | sed 's/^/$ghcVersion: /g'
+          nix-store -qR --include-outputs $(nix-instantiate --argstr compiler $ghcVersion demo.nix --add-root result/nixpkgs/$fgcVersion --indirect) | cachix push haskell-tools
+        done
