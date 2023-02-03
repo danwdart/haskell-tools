@@ -5,7 +5,7 @@ on:
   pull_request:
   push:
 jobs:
-  tests:
+  push-to-cachix:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
