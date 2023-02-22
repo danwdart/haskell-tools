@@ -1,0 +1,26 @@
+name: "Push to Cachix"
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  pull_request:
+  push:
+  workflow_dispatch:
+jobs:
+  push-to-cachix:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v17
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - uses: cachix/cachix-action@v11
+      with:
+        name: haskell-tools
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - run: |
+        for ghcVersion in ghc94 ghc92 ghc90;
+        do
+          mkdir -p result/nixpkgs/$ghcVersion
+          nix-build --argstr compiler $ghcVersion demo.nix -o result/nixpkgs/$ghcVersion --show-trace 2>&1 | sed "s/^/$ghcVersion: /g"
+          nix-store -qR --include-outputs $(nix-instantiate --argstr compiler $ghcVersion demo.nix --add-root result/nixpkgs/$ghcVersion --indirect) | cachix push haskell-tools
+        done
