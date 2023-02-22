@@ -22,5 +22,5 @@ jobs:
         do
           mkdir -p result/nixpkgs/$ghcVersion
           nix-build --argstr compiler $ghcVersion demo.nix -o result/nixpkgs/$ghcVersion --show-trace 2>&1 | sed "s/^/$ghcVersion: /g"
-          nix-store -qR --include-outputs $(nix-instantiate --argstr compiler $ghcVersion demo.nix --add-root result/nixpkgs/$ghcVersion --indirect) | cachix push haskell-tools
+          nix-store -qR --include-outputs $(nix-instantiate --argstr compiler $ghcVersion demo.nix --add-root result/nixpkgs/$ghcVersion --indirect) | cachix push dandart
         done
