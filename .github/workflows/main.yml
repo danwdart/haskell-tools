@@ -18,7 +18,7 @@ jobs:
         name: dandart
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: |
-        for ghcVersion in ghc94 ghc92 ghc90;
+        for ghcVersion in ghc96 ghc94 ghc92 ghc90;
         do
           mkdir -p result/nixpkgs/$ghcVersion
           nix-build --argstr compiler $ghcVersion demo.nix -o result/nixpkgs/$ghcVersion --show-trace 2>&1 | sed "s/^/$ghcVersion: /g"
