@@ -3,7 +3,7 @@
     nixpkgs = nixpkgs;
     compiler = compiler;
   },
-  compiler ? "ghc96"
+  compiler ? "ghc94"
 }:
 let
   tools = haskell-tools compiler;
