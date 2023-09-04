@@ -1,4 +1,4 @@
-name: "Push to Cachix"
+name: "Family"
 on:
   schedule:
     - cron: "0 2 * * *"
@@ -6,21 +6,63 @@ on:
   push:
   workflow_dispatch:
 jobs:
-  push-to-cachix:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v20
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Setup SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+    - name: Install Nix
+      uses: cachix/install-nix-action@v20
       with:
         nix_path: nixpkgs=channel:nixos-unstable
-    - uses: cachix/cachix-action@v11
+    - name: Setup Cachix
+      uses: cachix/cachix-action@v11
       with:
         name: dandart
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: |
-        for ghcVersion in ghc96 ghc94 ghc92 ghc90;
-        do
-          mkdir -p result/nixpkgs/$ghcVersion
-          nix-build --argstr compiler $ghcVersion demo.nix -o result/nixpkgs/$ghcVersion --show-trace 2>&1 | sed "s/^/$ghcVersion: /g"
-          nix-store -qR --include-outputs $(nix-instantiate --argstr compiler $ghcVersion demo.nix --add-root result/nixpkgs/$ghcVersion --indirect) | cachix push dandart
-        done
+    - name: Build 9.0 dependencies
+      run: |
+        mkdir -p result/nixpkgs/ghc90
+        nix-build --argstr compiler ghc90 demo.nix -o result/nixpkgs/ghc90
+    - name: Push 9.0 dependencies to Cachix
+      run: |
+        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc90 demo.nix --add-root result/nixpkgs/ghc90 --indirect) | cachix push dandart
+    - name: Push 9.0 dependencies to private cache server
+      run: |
+        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc90 demo.nix --add-root result/nixpkgs/ghc90 --indirect) | xargs nix-copy-closure --gzip -s --include-outputs ${{ vars.CACHE_USER }}@${{ vars.CACHE_SERVER }}
+    - name: Build 9.2 dependencies
+      run: |
+        mkdir -p result/nixpkgs/ghc92
+        nix-build --argstr compiler ghc92 demo.nix -o result/nixpkgs/ghc92
+    - name: Push 9.2 dependencies to Cachix
+      run: |
+        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc92 demo.nix --add-root result/nixpkgs/ghc92 --indirect) | cachix push dandart
+    - name: Push 9.2 dependencies to private cache server
+      run: |
+        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc92 demo.nix --add-root result/nixpkgs/ghc92 --indirect) | xargs nix-copy-closure --gzip -s --include-outputs ${{ vars.CACHE_USER }}@${{ vars.CACHE_SERVER }}
+    - name: Build 9.4 dependencies
+      run: |
+        mkdir -p result/nixpkgs/ghc94
+        nix-build --argstr compiler ghc94 demo.nix -o result/nixpkgs/ghc94
+    - name: Push 9.4 dependencies to Cachix
+      run: |
+        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc94 demo.nix --add-root result/nixpkgs/ghc94 --indirect) | cachix push dandart
+    - name: Push 9.4 dependencies to private cache server
+      run: |
+        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc94 demo.nix --add-root result/nixpkgs/ghc94 --indirect) | xargs nix-copy-closure --gzip -s --include-outputs ${{ vars.CACHE_USER }}@${{ vars.CACHE_SERVER }}
+    - name: Build 9.6 dependencies
+      run: |
+        mkdir -p result/nixpkgs/ghc96
+        nix-build --argstr compiler ghc96 demo.nix -o result/nixpkgs/ghc96
+    - name: Push 9.6 dependencies to Cachix
+      run: |
+        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc96 demo.nix --add-root result/nixpkgs/ghc96 --indirect) | cachix push dandart
+    - name: Push 9.6 dependencies to private cache server
+      run: |
+        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc96 demo.nix --add-root result/nixpkgs/ghc96 --indirect) | xargs nix-copy-closure --gzip -s --include-outputs ${{ vars.CACHE_USER }}@${{ vars.CACHE_SERVER }}
+    
