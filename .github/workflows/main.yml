@@ -20,6 +20,9 @@ jobs:
       uses: cachix/install-nix-action@v20
       with:
         nix_path: nixpkgs=channel:nixos-unstable
+        extra_nix_config: |
+          trusted-public-keys = ${{ vars.CACHE_TRUSTED_PUBLIC_KEYS }}
+          substituters = ${{ vars.CACHE_SUBSTITUTERS }}
     - name: Setup Cachix
       uses: cachix/cachix-action@v11
       with:
@@ -39,7 +42,6 @@ jobs:
         nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc90 demo.nix --add-root result/nixpkgs/ghc90 --indirect) | xargs nix-copy-closure --gzip -s --include-outputs ${{ vars.CACHE_USER }}@${{ vars.CACHE_SERVER }}
     - name: Build 9.2 dependencies
       run: |
-        mkdir -p result/nixpkgs/ghc92
         nix-build --argstr compiler ghc92 demo.nix -o result/nixpkgs/ghc92
     - name: Push 9.2 dependencies to Cachix
       run: |
@@ -49,7 +51,6 @@ jobs:
         nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc92 demo.nix --add-root result/nixpkgs/ghc92 --indirect) | xargs nix-copy-closure --gzip -s --include-outputs ${{ vars.CACHE_USER }}@${{ vars.CACHE_SERVER }}
     - name: Build 9.4 dependencies
       run: |
-        mkdir -p result/nixpkgs/ghc94
         nix-build --argstr compiler ghc94 demo.nix -o result/nixpkgs/ghc94
     - name: Push 9.4 dependencies to Cachix
       run: |
@@ -59,7 +60,6 @@ jobs:
         nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc94 demo.nix --add-root result/nixpkgs/ghc94 --indirect) | xargs nix-copy-closure --gzip -s --include-outputs ${{ vars.CACHE_USER }}@${{ vars.CACHE_SERVER }}
     - name: Build 9.6 dependencies
       run: |
-        mkdir -p result/nixpkgs/ghc96
         nix-build --argstr compiler ghc96 demo.nix -o result/nixpkgs/ghc96
     - name: Push 9.6 dependencies to Cachix
       run: |
