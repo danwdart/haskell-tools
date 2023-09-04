@@ -25,9 +25,11 @@ jobs:
       with:
         name: dandart
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - name: Prep result directory
+      run: |
+        mkdir -p result/nixpkgs
     - name: Build 9.0 dependencies
       run: |
-        mkdir -p result/nixpkgs/ghc90
         nix-build --argstr compiler ghc90 demo.nix -o result/nixpkgs/ghc90
     - name: Push 9.0 dependencies to Cachix
       run: |
