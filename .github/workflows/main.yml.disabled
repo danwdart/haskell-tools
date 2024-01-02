@@ -51,13 +51,13 @@ jobs:
         nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc92 demo.nix --add-root result/nixpkgs/ghc92 --indirect) | xargs nix-copy-closure --gzip -s --include-outputs ${{ vars.CACHE_USER }}@${{ vars.CACHE_SERVER }}
     - name: Build 9.4 dependencies
       run: |
-        nix-build --argstr compiler ghc94 demo.nix -o result/nixpkgs/ghc94
+        nix-build --argstr compiler ghc96 demo.nix -o result/nixpkgs/ghc96
     - name: Push 9.4 dependencies to Cachix
       run: |
-        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc94 demo.nix --add-root result/nixpkgs/ghc94 --indirect) | cachix push dandart
+        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc96 demo.nix --add-root result/nixpkgs/ghc96 --indirect) | cachix push dandart
     - name: Push 9.4 dependencies to private cache server
       run: |
-        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc94 demo.nix --add-root result/nixpkgs/ghc94 --indirect) | xargs nix-copy-closure --gzip -s --include-outputs ${{ vars.CACHE_USER }}@${{ vars.CACHE_SERVER }}
+        nix-store -qR --include-outputs $(nix-instantiate --argstr compiler ghc96 demo.nix --add-root result/nixpkgs/ghc96 --indirect) | xargs nix-copy-closure --gzip -s --include-outputs ${{ vars.CACHE_USER }}@${{ vars.CACHE_SERVER }}
     - name: Build 9.6 dependencies
       run: |
         nix-build --argstr compiler ghc96 demo.nix -o result/nixpkgs/ghc96

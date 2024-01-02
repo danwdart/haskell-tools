@@ -1,6 +1,6 @@
 {
   nixpkgs ? import <nixpkgs> {},
-  compiler ? "ghc94"
+  compiler ? "ghc96"
 }:
 let
   gitignore = nixpkgs.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
@@ -10,6 +10,7 @@ compiler: rec {
   ghc = nixpkgs.haskell.packages.${compiler};
   defaultBuildTools = with haskellPackages; [
     apply-refact
+    cabal-fmt
     cabal-install
     doctest
     ghci-dap
@@ -21,9 +22,12 @@ compiler: rec {
     hasktags
     hlint
     hoogle
+    hpack
+    # hpack-convert # broken in all versions
     implicit-hie
     krank
-    #stan
+    stack
+    # stan # broken in all versions
     stylish-haskell
     weeder
   ];
