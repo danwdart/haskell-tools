@@ -25,7 +25,7 @@ compiler: rec {
     hpack
     # hpack-convert # broken in all versions
     implicit-hie
-    krank
+    # krank # broken
     stack
     # stan # broken in all versions
     stylish-haskell
