@@ -12,12 +12,14 @@ let
         url = "https://github.com/guibou/krank.git";
         ref = "main";
       }) {};
+      stylish-haskell = nixpkgs.haskell.packages.ghc94.stylish-haskell;
     };
     ghc98 = {
       krank = nixpkgs.haskell.packages.ghc98.callCabal2nix "krank" (builtins.fetchGit {
         url = "https://github.com/guibou/krank.git";
         ref = "main";
       }) {};
+      stylish-haskell = nixpkgs.haskell.packages.ghc98.stylish-haskell;
     };
     ghc910 = {
       krank = (nixpkgs.haskell.packages.ghc910.override {
@@ -29,6 +31,12 @@ let
         url = "https://github.com/guibou/krank.git";
         ref = "main";
       }) {};
+      stylish-haskell = nixpkgs.haskell.lib.dontCheck (
+        nixpkgs.haskell.packages.ghc910.callCabal2nix "stylish-haskell" (builtins.fetchGit {
+          url = "https://github.com/jhrcek/stylish-haskell.git";
+          ref = "jhrcek/ghc-9.10";
+        }) {}
+      );
     };
   };
 in
@@ -57,7 +65,7 @@ compiler: rec {
     perCompiler.${compiler}.krank # broken
     stack
     stan # broken in all versions
-    stylish-haskell
+    perCompiler.${compiler}.stylish-haskell
     weeder
   ];
   optionalBuildTools = with haskellPackages; [
