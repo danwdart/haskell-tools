@@ -7,7 +7,7 @@
 }:
 let
   tools = haskell-tools compiler;
-  shell = tools.ghc.shellFor {
+  shell = tools.haskellPackages.shellFor {
     packages = p: [];
     buildInputs = tools.defaultBuildTools;
   };

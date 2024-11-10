@@ -5,24 +5,23 @@
 let
   gitignore = nixpkgs.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
   lib = nixpkgs.haskell.lib;
-  haskellPackages = nixpkgs.haskellPackages;
   perCompiler = {
-    ghc94 = {
-      krank = nixpkgs.haskell.packages.ghc94.callCabal2nix "krank" (builtins.fetchGit {
+    ghc94 = let haskellPackages = nixpkgs.haskell.packages.ghc94; in {
+      krank = haskellPackages.callCabal2nix "krank" (builtins.fetchGit {
         url = "https://github.com/guibou/krank.git";
         ref = "main";
       }) {};
-      stylish-haskell = nixpkgs.haskell.packages.ghc94.stylish-haskell;
+      stylish-haskell = haskellPackages.stylish-haskell;
+      ghci-dap = null;
+      haskell-debug-adapter = null;
+      cabal-install = null;
+      stack = null;
+      hlint = haskellPackages.hlint;
+      weeder = haskellPackages.weeder;
+      apply-refact = haskellPackages.apply-refact;
     };
-    ghc98 = {
-      krank = nixpkgs.haskell.packages.ghc98.callCabal2nix "krank" (builtins.fetchGit {
-        url = "https://github.com/guibou/krank.git";
-        ref = "main";
-      }) {};
-      stylish-haskell = nixpkgs.haskell.packages.ghc98.stylish-haskell;
-    };
-    ghc910 = {
-      krank = (nixpkgs.haskell.packages.ghc910.override {
+    ghc910 = let haskellPackages = nixpkgs.haskell.packages.ghc910; in {
+      krank = (haskellPackages.override {
         overrides = self: super: rec {
           pcre-heavy = lib.dontCheck super.pcre-heavy;
           PyF = lib.dontCheck super.PyF;
@@ -31,42 +30,50 @@ let
         url = "https://github.com/guibou/krank.git";
         ref = "main";
       }) {};
-      stylish-haskell = nixpkgs.haskell.lib.dontCheck (
-        nixpkgs.haskell.packages.ghc910.callCabal2nix "stylish-haskell" (builtins.fetchGit {
+      stylish-haskell = lib.dontCheck (
+        haskellPackages.callCabal2nix "stylish-haskell" (builtins.fetchGit {
           url = "https://github.com/jhrcek/stylish-haskell.git";
           ref = "jhrcek/ghc-9.10";
         }) {}
       );
+      ghci-dap = haskellPackages.ghci-dap;
+      haskell-debug-adapter = haskellPackages.haskell-debug-adapter;
+      cabal-install = haskellPackages.cabal-install;
+      stack = lib.doJailbreak nixpkgs.haskell.packages.ghc98.stack; # 2024-11-09 not ready yet
+      hlint = nixpkgs.haskell.packages.ghc98.hlint; # 2024-11-09 not ready yet
+      weeder = lib.dontCheck (lib.doJailbreak haskellPackages.weeder); # 2024-11-09 not ready yet
+      apply-refact = nixpkgs.haskell.packages.ghc98.apply-refact; # 2024-11-09 not ready yet
     };
   };
 in
 compiler: rec {
-  ghc = nixpkgs.haskell.packages.${compiler};
+  # A lot of these packages must be built using the ghc version in use.
+  haskellPackages = nixpkgs.haskell.packages.${compiler};
   defaultBuildTools = with haskellPackages; [
-    apply-refact
+    perCompiler.${compiler}.apply-refact
     cabal-fmt
-    cabal-install
+    perCompiler.${compiler}.cabal-install
     doctest
-    ghci-dap
+    perCompiler.${compiler}.ghci-dap
     ghcid
     ghcide
     haskell-dap
-    haskell-debug-adapter
+    perCompiler.${compiler}.haskell-debug-adapter
     haskell-language-server
     hasktags
-    hlint
+    perCompiler.${compiler}.hlint
     hoogle
     hpack
-    # (ghc.callCabal2nix "krank" (builtins.fetchGit {
+    # (ghc.callCabal2nix "hpack-convert" (builtins.fetchGit {
     #   url = "https://github.com/yamadapc/hpack-convert.git";
     #   ref = "hpack-convert";
     # }) {}) # broken in all versions
     implicit-hie
-    perCompiler.${compiler}.krank # broken
-    stack
+    perCompiler.${compiler}.krank
+    perCompiler.${compiler}.stack
     stan # broken in all versions
     perCompiler.${compiler}.stylish-haskell
-    weeder
+    perCompiler.${compiler}.weeder
   ];
   optionalBuildTools = with haskellPackages; [
     selenium-server-standalone
