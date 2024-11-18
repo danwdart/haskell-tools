@@ -19,6 +19,7 @@ let
       hlint = haskellPackages.hlint;
       weeder = haskellPackages.weeder;
       apply-refact = haskellPackages.apply-refact;
+      ghcid = haskellPackages.ghcid;
     };
     ghc910 = let haskellPackages = nixpkgs.haskell.packages.ghc910; in {
       krank = (haskellPackages.override {
@@ -43,6 +44,8 @@ let
       hlint = nixpkgs.haskell.packages.ghc98.hlint; # 2024-11-09 not ready yet
       weeder = lib.dontCheck (lib.doJailbreak haskellPackages.weeder); # 2024-11-09 not ready yet
       apply-refact = nixpkgs.haskell.packages.ghc98.apply-refact; # 2024-11-09 not ready yet
+      # https://github.com/haskell-fswatch/hfsnotify/issues/115
+      ghcid = nixpkgs.haskell.packages.ghc98.ghcid;
     };
   };
 in
@@ -55,7 +58,7 @@ compiler: rec {
     perCompiler.${compiler}.cabal-install
     doctest
     perCompiler.${compiler}.ghci-dap
-    ghcid
+    perCompiler.${compiler}.ghcid
     ghcide
     haskell-dap
     perCompiler.${compiler}.haskell-debug-adapter
