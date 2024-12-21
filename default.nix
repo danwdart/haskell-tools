@@ -1,26 +1,11 @@
 {
-  nixpkgs ? import <nixpkgs> {},
+  nixpkgs ? <nixpkgs> {},
   compiler ? "ghc910"
 }:
 let
   gitignore = nixpkgs.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
   lib = nixpkgs.haskell.lib;
   perCompiler = {
-    ghc94 = let haskellPackages = nixpkgs.haskell.packages.ghc94; in {
-      krank = haskellPackages.callCabal2nix "krank" (builtins.fetchGit {
-        url = "https://github.com/guibou/krank.git";
-        ref = "main";
-      }) {};
-      stylish-haskell = haskellPackages.stylish-haskell;
-      ghci-dap = null;
-      haskell-debug-adapter = null;
-      cabal-install = null;
-      stack = null;
-      hlint = haskellPackages.hlint;
-      weeder = haskellPackages.weeder;
-      apply-refact = haskellPackages.apply-refact;
-      ghcid = haskellPackages.ghcid;
-    };
     ghc910 = let haskellPackages = nixpkgs.haskell.packages.ghc910; in {
       krank = (haskellPackages.override {
         overrides = self: super: rec {
@@ -31,6 +16,7 @@ let
         url = "https://github.com/guibou/krank.git";
         ref = "main";
       }) {};
+      # https://github.com/jhrcek/stylish-haskell/pull/3
       stylish-haskell = lib.dontCheck (
         haskellPackages.callCabal2nix "stylish-haskell" (builtins.fetchGit {
           url = "https://github.com/jhrcek/stylish-haskell.git";
