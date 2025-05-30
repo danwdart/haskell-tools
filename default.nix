@@ -6,11 +6,11 @@ let
   gitignore = nixpkgs.nix-gitignore.gitignoreSourcePure [ ./.gitignore ];
   lib = nixpkgs.haskell.lib;
   perCompiler = {
-    ghc910 = let haskellPackages = nixpkgs.haskell.packages.ghc910; in {
-      cabal-fmt = nixpkgs.haskell.packages.ghc910.cabal-fmt;
-      ghcide = nixpkgs.haskell.packages.ghc910.ghcide;
-      doctest = nixpkgs.haskell.packages.ghc910.doctest;
-      krank = (nixpkgs.haskell.packages.ghc910.override {
+    ghc912 = let haskellPackages = nixpkgs.haskell.packages.ghc912; in {
+      cabal-fmt = nixpkgs.haskell.packages.ghc912.cabal-fmt;
+      ghcide = nixpkgs.haskell.packages.ghc912.ghcide;
+      doctest = nixpkgs.haskell.packages.ghc912.doctest;
+      krank = (nixpkgs.haskell.packages.ghc912.override {
         overrides = self: super: rec {
           pcre-heavy = lib.dontCheck super.pcre-heavy;
           PyF = lib.dontCheck super.PyF;
@@ -26,11 +26,11 @@ let
           ref = "jhrcek/ghc-9.10";
         }) {}
       );
-      implicit-hie = nixpkgs.haskell.packages.ghc910.implicit-hie;
-      hoogle = nixpkgs.haskell.packages.ghc910.hoogle;
-      hpack = nixpkgs.haskell.packages.ghc910.hpack;
-      haskell-language-server = nixpkgs.haskell.packages.ghc910.haskell-language-server;
-      hasktags = nixpkgs.haskell.packages.ghc910.hasktags;
+      implicit-hie = nixpkgs.haskell.packages.ghc912.implicit-hie;
+      hoogle = nixpkgs.haskell.packages.ghc912.hoogle;
+      hpack = nixpkgs.haskell.packages.ghc912.hpack;
+      haskell-language-server = nixpkgs.haskell.packages.ghc912.haskell-language-server;
+      hasktags = nixpkgs.haskell.packages.ghc912.hasktags;
       ghci-dap = haskellPackages.ghci-dap;
       haskell-debug-adapter = haskellPackages.haskell-debug-adapter;
       cabal-install = haskellPackages.cabal-install;
@@ -40,13 +40,13 @@ let
       apply-refact = nixpkgs.haskell.packages.ghc98.apply-refact; # 2024-11-09 not ready yet
       # https://github.com/haskell-fswatch/hfsnotify/issues/115
       ghcid = nixpkgs.haskell.packages.ghc98.ghcid;
-      stan = nixpkgs.haskell.packages.ghc910.stan;
+      stan = nixpkgs.haskell.packages.ghc912.stan;
     };
     ghc912 = let haskellPackages = nixpkgs.haskell.packages.ghc912; in {
-      cabal-fmt = nixpkgs.haskell.packages.ghc910.cabal-fmt;
-      ghcide = nixpkgs.haskell.packages.ghc910.ghcide;
-      doctest = nixpkgs.haskell.packages.ghc910.doctest;
-      krank = (nixpkgs.haskell.packages.ghc910.override {
+      cabal-fmt = nixpkgs.haskell.packages.ghc912.cabal-fmt;
+      ghcide = nixpkgs.haskell.packages.ghc912.ghcide;
+      doctest = nixpkgs.haskell.packages.ghc912.doctest;
+      krank = (nixpkgs.haskell.packages.ghc912.override {
         overrides = self: super: rec {
           pcre-heavy = lib.dontCheck super.pcre-heavy;
           PyF = lib.dontCheck super.PyF;
@@ -57,26 +57,26 @@ let
       }) {};
       # https://github.com/jhrcek/stylish-haskell/pull/3
       stylish-haskell = lib.dontCheck (
-        nixpkgs.haskell.packages.ghc910.callCabal2nix "stylish-haskell" (builtins.fetchGit {
+        nixpkgs.haskell.packages.ghc912.callCabal2nix "stylish-haskell" (builtins.fetchGit {
           url = "https://github.com/jhrcek/stylish-haskell.git";
           ref = "jhrcek/ghc-9.10";
         }) {}
       );
-      implicit-hie = nixpkgs.haskell.packages.ghc910.implicit-hie;
-      hoogle = nixpkgs.haskell.packages.ghc910.hoogle;
-      hpack = nixpkgs.haskell.packages.ghc910.hpack;
-      haskell-language-server = nixpkgs.haskell.packages.ghc910.haskell-language-server;
-      hasktags = nixpkgs.haskell.packages.ghc910.hasktags;
-      ghci-dap = nixpkgs.haskell.packages.ghc910.ghci-dap;
-      haskell-debug-adapter = nixpkgs.haskell.packages.ghc910.haskell-debug-adapter;
-      cabal-install = nixpkgs.haskell.packages.ghc910.cabal-install; # TODO: 3.14.1.0
+      implicit-hie = nixpkgs.haskell.packages.ghc912.implicit-hie;
+      hoogle = nixpkgs.haskell.packages.ghc912.hoogle;
+      hpack = nixpkgs.haskell.packages.ghc912.hpack;
+      haskell-language-server = nixpkgs.haskell.packages.ghc912.haskell-language-server;
+      hasktags = nixpkgs.haskell.packages.ghc912.hasktags;
+      ghci-dap = nixpkgs.haskell.packages.ghc912.ghci-dap;
+      haskell-debug-adapter = nixpkgs.haskell.packages.ghc912.haskell-debug-adapter;
+      cabal-install = nixpkgs.cabal-install; # TODO: 3.14.1.0
       stack = lib.doJailbreak nixpkgs.haskell.packages.ghc98.stack; # 2024-11-09 not ready yet
       hlint = nixpkgs.haskell.packages.ghc98.hlint; # 2024-11-09 not ready yet
-      weeder = lib.dontCheck (lib.doJailbreak nixpkgs.haskell.packages.ghc910.weeder); # 2024-11-09 not ready yet
+      weeder = lib.dontCheck (lib.doJailbreak nixpkgs.haskell.packages.ghc912.weeder); # 2024-11-09 not ready yet
       apply-refact = nixpkgs.haskell.packages.ghc98.apply-refact; # 2024-11-09 not ready yet
       # https://github.com/haskell-fswatch/hfsnotify/issues/115
       ghcid = nixpkgs.haskell.packages.ghc98.ghcid;
-      stan = nixpkgs.haskell.packages.ghc910.stan;
+      stan = nixpkgs.haskell.packages.ghc912.stan;
     };
   };
 in
