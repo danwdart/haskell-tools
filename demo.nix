@@ -1,7 +1,7 @@
 { nixpkgs ? import <nixpkgs> {},
   haskell-tools ? import ./default.nix {
-    nixpkgs = nixpkgs;
-    compiler = compiler;
+    inherit nixpkgs;
+    inherit compiler;
   },
   compiler ? "ghc912"
 }:

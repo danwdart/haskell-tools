@@ -1,7 +1,7 @@
 { nixpkgs ? <nixpkgs> {},
   haskell-tools ? import (builtins.fetchTarball "https://github.com/danwdart/haskell-tools/archive/master.tar.gz") {
-    nixpkgs = nixpkgs;
-    compiler = compiler;
+    inherit nixpkgs;
+    inherit compiler;
   },
   compiler ? "ghc912"
 }:
